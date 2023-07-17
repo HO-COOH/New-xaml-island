@@ -1,0 +1,8 @@
+namespace RuntimeComponent1
+{
+    [default_interface]
+    runtimeclass App : Windows.UI.Xaml.Application
+    {
+        App();
+    }
+}
