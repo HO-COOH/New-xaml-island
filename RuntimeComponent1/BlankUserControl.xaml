@@ -5,26 +5,16 @@
     xmlns:local="using:RuntimeComponent1"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d">
 
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="Button">
+        <Button x:Name="Button" Content="{x:Bind MyProperty}">
             <Button.Flyout>
                 <MenuFlyout>
                     <MenuFlyoutItem Text="Item1"/>
                 </MenuFlyout>
             </Button.Flyout>
-            Click Me</Button>
+        </Button>
 
-        <muxc:DropDownButton Content="Email">
-            <muxc:DropDownButton.Flyout>
-                <MenuFlyout Placement="Bottom">
-                    <MenuFlyoutItem Text="Send"/>
-                    <MenuFlyoutItem Text="Reply"/>
-                    <MenuFlyoutItem Text="Reply All"/>
-                </MenuFlyout>
-            </muxc:DropDownButton.Flyout>
-        </muxc:DropDownButton>
     </StackPanel>
 </UserControl>

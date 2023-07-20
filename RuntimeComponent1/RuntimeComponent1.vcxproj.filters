@@ -17,6 +17,7 @@
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="app.base.h" />
+    <ClInclude Include="PropertyChangeHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="Class.idl" />

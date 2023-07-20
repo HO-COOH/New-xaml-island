@@ -29,8 +29,8 @@ void Init(HWND hwnd)
 {
     g_manager = winrt::Windows::UI::Xaml::Hosting::WindowsXamlManager::InitializeForCurrentThread();
 
-    winrt::Microsoft::UI::Xaml::Controls::XamlControlsResources resources{};
-    uwpApp = winrt::RuntimeComponent1::App{};
+    //winrt::Microsoft::UI::Xaml::Controls::XamlControlsResources resources{};
+    //uwpApp = winrt::RuntimeComponent1::App{};
 
     winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource source;
 
@@ -132,8 +132,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Store instance handle in our global variable
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+   HWND hWnd = CreateWindowExW(0L, szWindowClass, szTitle, (0x00000000L | 0x00C00000L | 0x00080000L | 0x00040000L | 0x00020000L | 0x00010000L), ((int)0x80000000), 0, 300, 300, nullptr, nullptr, hInstance, nullptr);
 
    Init(hWnd);
 

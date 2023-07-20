@@ -2,7 +2,4 @@
     x:Class="RuntimeComponent1.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Application.Resources>
-        <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
-    </Application.Resources>
 </Application>

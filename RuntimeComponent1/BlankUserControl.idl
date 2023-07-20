@@ -1,9 +1,10 @@
 namespace RuntimeComponent1
 {
+    [bindable]
     [default_interface]
     runtimeclass BlankUserControl : Windows.UI.Xaml.Controls.UserControl
     {
         BlankUserControl();
-        Int32 MyProperty;
+        String MyProperty{get;};
     }
 }
