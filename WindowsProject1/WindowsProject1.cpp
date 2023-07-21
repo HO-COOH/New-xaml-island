@@ -27,10 +27,8 @@ winrt::RuntimeComponent1::App uwpApp{nullptr};
 winrt::Windows::UI::Xaml::Hosting::WindowsXamlManager g_manager{nullptr};
 void Init(HWND hwnd)
 {
-    g_manager = winrt::Windows::UI::Xaml::Hosting::WindowsXamlManager::InitializeForCurrentThread();
-
-    winrt::Microsoft::UI::Xaml::Controls::XamlControlsResources resources{};
     uwpApp = winrt::RuntimeComponent1::App{};
+    g_manager = winrt::Windows::UI::Xaml::Hosting::WindowsXamlManager::InitializeForCurrentThread();
 
     winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource source;
 

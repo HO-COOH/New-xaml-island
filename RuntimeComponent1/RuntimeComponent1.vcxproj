@@ -71,11 +71,15 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <PropertyGroup>
     <DesktopCompatible>true</DesktopCompatible>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <DesktopCompatible>true</DesktopCompatible>
+    <!-- Don't store outputs in a subfolder otherwise the main program can't find them. -->
+    <GenerateProjectSpecificOutputFolder>false</GenerateProjectSpecificOutputFolder>
+    <!-- Disable embedded XBF (even if the naming suggests otherwise) so that our XAML is in the final resources.pri. -->
+    <DisableEmbeddedXbf>false</DisableEmbeddedXbf>
+    <_GenerateProjectPriFileDependsOn>PlaceAppXbfAtRootOfResourceTree;$(_GenerateProjectPriFileDependsOn)</_GenerateProjectPriFileDependsOn>
+    <!-- Prevent the XAML source code from being copied to the output -->
+    <GenerateLibraryLayout>false</GenerateLibraryLayout>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -188,6 +192,33 @@
     <Import Project="..\packages\Microsoft.Web.WebView2.1.0.1264.42\build\native\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.1264.42\build\native\Microsoft.Web.WebView2.targets')" />
     <Import Project="..\packages\Microsoft.UI.Xaml.2.8.5\build\native\Microsoft.UI.Xaml.targets" Condition="Exists('..\packages\Microsoft.UI.Xaml.2.8.5\build\native\Microsoft.UI.Xaml.targets')" />
   </ImportGroup>
+    <Target Name="PlaceAppXbfAtRootOfResourceTree" DependsOnTargets="GetPackagingOutputs">
+      <ItemGroup>
+        <_RelocatedAppXamlData Include="@(PackagingOutputs)" Condition="'%(Filename)' == 'App' and ('%(Extension)' == '.xaml' or '%(Extension)' == '.xbf')" />
+        <PackagingOutputs Remove="@(_RelocatedAppXamlData)" />
+        <PackagingOutputs Include="@(_RelocatedAppXamlData)">
+          <TargetPath>%(Filename)%(Extension)</TargetPath>
+        </PackagingOutputs>
+      </ItemGroup>
+    </Target>
+  <Target Name="MakeWinMDReferencesNonPrivate" BeforeTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <_TemporaryReferences Include="@(Reference)" Condition="'%(Extension)' == '.winmd' And '%(Reference.Private)' == ''" />
+      <Reference Remove="@(_TemporaryReferences)" />
+      <Reference Include="@(_TemporaryReferences)">
+        <Private>false</Private>
+      </Reference>
+    </ItemGroup>
+  </Target>
+  <Target Name="RemoveWebView2" BeforeTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <_WebView2Reference Include="@(Reference)" Condition="'%(Filename)' == 'Microsoft.Web.WebView2.Core'" />
+      <Reference Remove="@(_WebView2Reference)" />
+      <Reference Include="@(_WebView2Reference)" RemoveMetadata="Implementation" />
+
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(Filename)' == 'Microsoft.Web.WebView2.Core'" />
+    </ItemGroup>
+  </Target>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>

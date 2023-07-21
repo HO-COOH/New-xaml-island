@@ -155,6 +155,12 @@
   <ItemGroup>
     <ProjectReference Include="..\RuntimeComponent1\RuntimeComponent1.vcxproj">
       <Project>{5c34a32d-b2ec-417b-a303-228f90251f0d}</Project>
+      <DeploymentContent>true</DeploymentContent>
+      <!--
+          Prevent the .pri and .winmd from showing up in the final output.
+          IDK why this doesn't also prevent copying the .dll, but whatever.
+      -->
+      <Private>false</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +175,24 @@
     <Import Project="..\packages\Microsoft.Web.WebView2.1.0.1264.42\build\native\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.1264.42\build\native\Microsoft.Web.WebView2.targets')" />
     <Import Project="..\packages\Microsoft.UI.Xaml.2.8.5\build\native\Microsoft.UI.Xaml.targets" Condition="Exists('..\packages\Microsoft.UI.Xaml.2.8.5\build\native\Microsoft.UI.Xaml.targets')" />
   </ImportGroup>
+  <Target Name="MakeWinMDReferencesNonPrivate" BeforeTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <_TemporaryReferences Include="@(Reference)" Condition="'%(Extension)' == '.winmd' And '%(Reference.Private)' == ''" />
+      <Reference Remove="@(_TemporaryReferences)" />
+      <Reference Include="@(_TemporaryReferences)">
+        <Private>false</Private>
+      </Reference>
+    </ItemGroup>
+  </Target>
+  <Target Name="RemoveWebView2" BeforeTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <_WebView2Reference Include="@(Reference)" Condition="'%(Filename)' == 'Microsoft.Web.WebView2.Core'" />
+      <Reference Remove="@(_WebView2Reference)" />
+      <Reference Include="@(_WebView2Reference)" RemoveMetadata="Implementation" />
+
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)" Condition="'%(Filename)' == 'Microsoft.Web.WebView2.Core'" />
+    </ItemGroup>
+  </Target>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
