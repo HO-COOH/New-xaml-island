@@ -72,6 +72,16 @@
     <Content Include="Images\StoreLogo.png" />
     <Content Include="Images\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
+  <Target Name="FlattenPackage" BeforeTargets="_ConvertItems">
+    <ItemGroup>
+      <_TemporaryFilteredWapProjOutput Include="@(_FilteredNonWapProjProjectOutput)" />
+      <_FilteredNonWapProjProjectOutput Remove="@(_TemporaryFilteredWapProjOutput)" />
+      <_FilteredNonWapProjProjectOutput Include="@(_TemporaryFilteredWapProjOutput)">
+        <SourceProject>
+        </SourceProject>
+      </_FilteredNonWapProjProjectOutput>
+    </ItemGroup>
+  </Target>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" PrivateAssets="all" />
